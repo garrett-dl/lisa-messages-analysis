@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Garrett &amp; Lisa — Message Analysis</title>
+  <style>
+    :root {
+      --ink: #3d3540;
+      --muted: #8a7f88;
+      --me: #e76f51;
+      --partner: #9d4edd;
+      --accent: #e63946;
+      --bg: #fdf8fb;
+      --card: #ffffff;
+      --grid: #eadfe6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 clamp(12px, 3vw, 22px) 76px;
+    }
+
+    header {
+      text-align: center;
+      padding: clamp(36px, 8vw, 64px) 18px 28px;
+      background: radial-gradient(120% 90% at 50% 0, #fbeef6 0, #fdf8fb 70%);
+    }
+
+    header .heart {
+      font-size: 34px;
+    }
+
+    h1 {
+      font-size: clamp(1.7rem, 6.5vw, 2.5rem);
+      margin: .2em 0 .1em;
+      font-weight: 700;
+      letter-spacing: -.5px;
+    }
+
+    header .span {
+      color: var(--muted);
+      font-size: clamp(.9rem, 3.5vw, 1.05rem);
+      letter-spacing: .3px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      max-width: 1000px;
+      margin: 30px auto 0;
+      padding: 0 clamp(12px, 3vw, 22px);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--grid);
+      border-radius: 14px;
+      padding: 16px 10px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(120, 80, 110, .05);
+    }
+
+    .card-v {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .card-l {
+      font-size: .72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-top: 3px;
+    }
+
+    .sec {
+      background: var(--card);
+      border: 1px solid var(--grid);
+      border-radius: 18px;
+      padding: clamp(18px, 4vw, 30px) clamp(16px, 4vw, 30px) clamp(20px, 4vw, 34px);
+      margin-top: 22px;
+      box-shadow: 0 2px 10px rgba(120, 80, 110, .04);
+    }
+
+    h2 {
+      font-size: 1.45rem;
+      margin: 0 0 4px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h2 .num {
+      font-size: .85rem;
+      color: #fff;
+      background: var(--accent);
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    h4 {
+      margin: 18px 0 8px;
+      font-size: .95rem;
+      color: var(--ink);
+    }
+
+    .sub {
+      color: var(--muted);
+      margin: 0 0 18px;
+      font-size: .95rem;
+    }
+
+    .chart-wrap {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .chart {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Flex/grid children default to min-width:auto and refuse to shrink below their
+   content; without this a wide chart would stretch the whole page sideways. */
+    .two-col>*,
+    .three-col>*,
+    .balance-row>* {
+      min-width: 0;
+    }
+
+    .donut {
+      width: 240px;
+      height: 240px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    .donut-big {
+      font-size: 26px;
+      font-weight: 700;
+      fill: var(--ink);
+    }
+
+    text.ax {
+      font-size: 12px;
+      fill: var(--muted);
+      font-family: -apple-system, sans-serif;
+    }
+
+    .take {
+      background: #fbeef6;
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 18px 0 0;
+      font-size: .95rem;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      margin: 0 0 8px;
+      font-size: .85rem;
+      color: var(--muted);
+    }
+
+    .lg {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lg i {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .cloud {
+      text-align: center;
+      line-height: 2.2;
+      padding: 10px 0 6px;
+    }
+
+    .cloud .w {
+      display: inline-block;
+      margin: 0 .35em;
+      color: var(--partner);
+      font-weight: 600;
+    }
+
+    .cloud .w:nth-child(3n) {
+      color: var(--me);
+    }
+
+    .cloud .w:nth-child(5n) {
+      color: var(--accent);
+    }
+
+    .phrase-cols {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .phrase-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .phrase-card h4 {
+      margin: 0 0 10px;
+    }
+
+    .phrase-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .phrase-list li {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 9px;
+      margin-bottom: 4px;
+      border-radius: 7px;
+      overflow: hidden;
+      font-size: .9rem;
+      background: var(--bg);
+    }
+
+    .pl-bar {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: #f1e3f3;
+      z-index: 0;
+    }
+
+    .pl-t {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+    }
+
+    .pl-c {
+      position: relative;
+      z-index: 1;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 26px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .emoji-mini {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .emoji-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--bg);
+      border: 1px solid var(--grid);
+      border-radius: 10px;
+      padding: 8px 12px;
+    }
+
+    .emoji-item .e {
+      font-size: 1.5rem;
+    }
+
+    .emoji-item .en {
+      font-size: .72rem;
+      color: var(--muted);
+      flex: 1;
+      line-height: 1.2;
+    }
+
+    .emoji-item .ec {
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .balance-row {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .mini-stat {
+      background: var(--bg);
+      border: 1px solid var(--grid);
+      border-radius: 14px;
+      padding: 22px 16px;
+      text-align: center;
+    }
+
+    .ms-v {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .ms-l {
+      font-size: .85rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .ms-l span {
+      font-size: .78rem;
+    }
+
+    .milestone {
+      display: flex;
+      gap: 18px;
+      background: #fbeef6;
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin-bottom: 18px;
+    }
+
+    .mi-date {
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .mi-score {
+      font-weight: 400;
+      font-size: .72rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .quote {
+      font-style: italic;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #f1e3f3;
+      color: var(--partner);
+      border-radius: 20px;
+      padding: 1px 9px;
+      font-size: .72rem;
+      margin: 0 3px 3px 0;
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .fact {
+      background: var(--bg);
+      border: 1px solid var(--grid);
+      border-radius: 12px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .fact span {
+      font-size: .72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .fact div {
+      margin-top: 6px;
+      font-size: .95rem;
+    }
+
+    .pets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pet {
+      background: var(--bg);
+      border: 1px solid var(--grid);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: .9rem;
+    }
+
+    .pet b {
+      color: var(--accent);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: .8rem;
+      margin-top: 40px;
+    }
+
+    /* Tablet / small laptop: give every chart the full column width and let any
+   that are still narrower than ~560px scroll horizontally rather than crushing
+   their labels. Side-by-side rows stack here so charts aren't squeezed. */
+    @media (max-width:760px) {
+      .cards {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .three-col,
+      .facts,
+      .emoji-grid,
+      .phrase-cols {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .balance-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .balance-row>div {
+        flex: 1 1 auto !important;
+      }
+
+      .chart {
+        min-width: 560px;
+      }
+    }
+
+    /* Phone */
+    @media (max-width:480px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .three-col,
+      .facts,
+      .emoji-grid,
+      .emoji-mini,
+      .phrase-cols,
+      .phrase-cols-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 13px 8px;
+      }
+
+      .card-v {
+        font-size: 1.3rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      .milestone {
+        flex-direction: column;
+        gap: 6px;
+        padding: 14px 16px;
+      }
+
+      .mi-date {
+        white-space: normal;
+      }
+
+      /* .chart keeps the 560px min-width from the wider breakpoint and scrolls */
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="heart">💜</div>
+    <h1>Garrett &amp; Lisa</h1>
+    <div class="span">Oct 10, 2025 – Jun 23, 2026</div>
+  </header>
+  <div class="cards">
+    <div class="card">
+      <div class="card-v">6,908</div>
+      <div class="card-l">messages</div>
+    </div>
+    <div class="card">
+      <div class="card-v">257</div>
+      <div class="card-l">days together</div>
+    </div>
+    <div class="card">
+      <div class="card-v">26.9</div>
+      <div class="card-l">messages / day</div>
+    </div>
+    <div class="card">
+      <div class="card-v">72,713</div>
+      <div class="card-l">words sent</div>
+    </div>
+    <div class="card">
+      <div class="card-v">1579</div>
+      <div class="card-l">emojis</div>
+    </div>
+    <div class="card">
+      <div class="card-v">166</div>
+      <div class="card-l">photos shared</div>
+    </div>
+  </div>
+  <div class="wrap">
+    <section class="sec">
+      <h2><span class="num">02</span>Messages per day</h2>
+      <p class="sub">Daily volume across the whole relationship, with a 7-day rolling average to show the trend.</p>
+      <div class="legend"><span class="lg"><i style="background:#eadfe6"></i>daily count</span><span class="lg"><i
+            style="background:#e63946"></i>7-day average</span></div>
+      <div class="chart-wrap"><svg viewBox="0 0 920 300" class="chart" role="img">
+          <line x1="46" y1="254.0" x2="874" y2="254.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="258.0"
+            text-anchor="end" class="ax">0</text>
+          <line x1="46" y1="202.0" x2="874" y2="202.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="206.0"
+            text-anchor="end" class="ax">43</text>
+          <line x1="46" y1="150.0" x2="874" y2="150.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="154.0"
+            text-anchor="end" class="ax">86</text>
+          <line x1="46" y1="98.0" x2="874" y2="98.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="102.0"
+            text-anchor="end" class="ax">128</text>
+          <line x1="46" y1="46.0" x2="874" y2="46.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="50.0"
+            text-anchor="end" class="ax">171</text>
+          <line x1="46.0" y1="46" x2="46.0" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="46.0" y="272"
+            text-anchor="middle" class="ax">Oct</text>
+          <line x1="117.2" y1="46" x2="117.2" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="117.2" y="272"
+            text-anchor="middle" class="ax">Nov</text>
+          <line x1="214.2" y1="46" x2="214.2" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="214.2" y="272"
+            text-anchor="middle" class="ax">Dec</text>
+          <line x1="314.5" y1="46" x2="314.5" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="314.5" y="272"
+            text-anchor="middle" class="ax">Jan</text>
+          <line x1="414.7" y1="46" x2="414.7" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="414.7" y="272"
+            text-anchor="middle" class="ax">Feb</text>
+          <line x1="505.3" y1="46" x2="505.3" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="505.3" y="272"
+            text-anchor="middle" class="ax">Mar</text>
+          <line x1="605.5" y1="46" x2="605.5" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="605.5" y="272"
+            text-anchor="middle" class="ax">Apr</text>
+          <line x1="702.6" y1="46" x2="702.6" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="702.6" y="272"
+            text-anchor="middle" class="ax">May</text>
+          <line x1="802.8" y1="46" x2="802.8" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="802.8" y="272"
+            text-anchor="middle" class="ax">Jun</text>
+          <polyline
+            points="46.0,219.9 49.2,234.5 52.5,185.9 55.7,187.1 58.9,105.6 62.2,127.5 65.4,106.8 68.6,137.2 71.9,228.5 75.1,177.4 78.3,165.2 81.6,122.6 84.8,195.6 88.0,229.7 91.3,232.1 94.5,254.0 97.8,224.8 101.0,170.1 104.2,167.6 107.5,218.7 110.7,131.1 113.9,95.9 117.2,182.2 120.4,232.1 123.6,216.3 126.9,241.8 130.1,227.2 133.3,183.5 136.6,82.5 139.8,171.3 143.0,160.3 146.3,210.2 149.5,200.5 152.7,212.6 156.0,194.4 159.2,172.5 162.4,230.9 165.7,185.9 168.9,217.5 172.1,226.0 175.4,210.2 178.6,224.8 181.8,157.9 185.1,254.0 188.3,251.6 191.5,232.1 194.8,190.7 198.0,216.3 201.2,223.6 204.5,251.6 207.7,228.5 211.0,241.8 214.2,232.1 217.4,206.6 220.7,224.8 223.9,243.1 227.1,215.1 230.4,251.6 233.6,252.8 236.8,224.8 240.1,211.4 243.3,183.5 246.5,193.2 249.8,187.1 253.0,237.0 256.2,224.8 259.5,184.7 262.7,227.2 265.9,196.8 269.2,234.5 272.4,252.8 275.6,254.0 278.9,250.4 282.1,227.2 285.3,193.2 288.6,213.9 291.8,210.2 295.0,179.8 298.3,167.6 301.5,207.8 304.8,210.2 308.0,234.5 311.2,250.4 314.5,247.9 317.7,227.2 320.9,222.4 324.2,218.7 327.4,223.6 330.6,194.4 333.9,212.6 337.1,223.6 340.3,245.5 343.6,250.4 346.8,245.5 350.0,217.5 353.3,202.9 356.5,212.6 359.7,207.8 363.0,213.9 366.2,252.8 369.4,252.8 372.7,230.9 375.9,215.1 379.1,241.8 382.4,201.7 385.6,241.8 388.8,254.0 392.1,252.8 395.3,192.0 398.5,246.7 401.8,240.6 405.0,238.2 408.2,210.2 411.5,252.8 414.7,254.0 418.0,201.7 421.2,194.4 424.4,210.2 427.7,232.1 430.9,243.1 434.1,254.0 437.4,254.0 440.6,254.0 443.8,252.8 447.1,254.0 450.3,254.0 453.5,252.8 456.8,251.6 460.0,249.1 463.2,209.0 466.5,241.8 469.7,210.2 472.9,219.9 476.2,206.6 479.4,228.5 482.6,252.8 485.9,228.5 489.1,229.7 492.3,222.4 495.6,221.2 498.8,211.4 502.0,243.1 505.3,240.6 508.5,238.2 511.8,222.4 515.0,240.6 518.2,213.9 521.5,224.8 524.7,228.5 527.9,254.0 531.2,215.1 534.4,148.2 537.6,195.6 540.9,223.6 544.1,209.0 547.3,254.0 550.6,227.2 553.8,254.0 557.0,233.3 560.3,240.6 563.5,223.6 566.7,213.9 570.0,217.5 573.2,243.1 576.4,211.4 579.7,199.3 582.9,221.2 586.1,189.5 589.4,136.0 592.6,194.4 595.8,252.8 599.1,254.0 602.3,254.0 605.5,254.0 608.8,254.0 612.0,254.0 615.2,254.0 618.5,254.0 621.7,241.8 625.0,223.6 628.2,238.2 631.4,237.0 634.7,254.0 637.9,254.0 641.1,254.0 644.4,254.0 647.6,185.9 650.8,46.0 654.1,193.2 657.3,254.0 660.5,194.4 663.8,246.7 667.0,254.0 670.2,254.0 673.5,254.0 676.7,254.0 679.9,252.8 683.2,252.8 686.4,254.0 689.6,181.0 692.9,228.5 696.1,165.2 699.3,187.1 702.6,245.5 705.8,254.0 709.0,254.0 712.3,254.0 715.5,254.0 718.8,254.0 722.0,254.0 725.2,254.0 728.5,254.0 731.7,228.5 734.9,198.0 738.2,173.7 741.4,234.5 744.6,223.6 747.9,166.4 751.1,205.3 754.3,254.0 757.6,254.0 760.8,254.0 764.0,210.2 767.3,254.0 770.5,254.0 773.7,254.0 777.0,252.8 780.2,252.8 783.4,228.5 786.7,190.7 789.9,222.4 793.1,234.5 796.4,252.8 799.6,254.0 802.8,251.6 806.1,254.0 809.3,254.0 812.5,254.0 815.8,219.9 819.0,132.4 822.2,245.5 825.5,192.0 828.7,190.7 832.0,254.0 835.2,254.0 838.4,174.9 841.7,254.0 844.9,254.0 848.1,254.0 851.4,238.2 854.6,215.1 857.8,247.9 861.1,250.4 864.3,254.0 867.5,183.5 870.8,160.3 874.0,239.4"
+            fill="none" stroke="#eadfe6" stroke-width="2" stroke-linejoin="round" />
+          <polyline
+            points="46.0,219.9 49.2,227.2 52.5,213.5 55.7,206.8 58.9,186.6 62.2,176.8 65.4,166.8 68.6,155.0 71.9,154.1 75.1,152.9 78.3,149.8 81.6,152.2 84.8,161.9 88.0,179.4 91.3,193.1 94.5,196.7 97.8,203.4 101.0,204.1 104.2,210.6 107.5,213.9 110.7,199.7 113.9,180.3 117.2,170.1 120.4,171.2 123.6,177.7 126.9,188.3 130.1,189.5 133.3,197.0 136.6,195.1 139.8,193.5 143.0,183.3 146.3,182.4 149.5,176.5 152.7,174.4 156.0,176.0 159.2,188.8 162.4,197.3 165.7,201.0 168.9,202.1 172.1,205.7 175.4,205.3 178.6,209.7 181.8,207.7 185.1,210.9 188.3,220.3 191.5,222.4 194.8,217.4 198.0,218.2 201.2,218.0 204.5,231.4 207.7,227.7 211.0,226.4 214.2,226.4 217.4,228.6 220.7,229.8 223.9,232.6 227.1,227.4 230.4,230.8 233.6,232.2 236.8,231.3 240.1,232.0 243.3,226.0 246.5,218.8 249.8,215.0 253.0,212.8 256.2,208.9 259.5,203.0 262.7,205.3 265.9,207.3 269.2,213.1 272.4,222.5 275.6,224.9 278.9,228.6 282.1,234.7 285.3,229.8 288.6,232.2 291.8,228.8 295.0,218.4 298.3,206.1 301.5,200.0 304.8,197.6 308.0,203.4 311.2,208.6 314.5,214.0 317.7,220.8 320.9,228.6 324.2,230.2 327.4,232.1 330.6,226.4 333.9,221.0 337.1,217.5 340.3,220.1 343.6,224.1 346.8,228.0 350.0,227.1 353.3,228.3 356.5,228.3 359.7,226.0 363.0,221.5 366.2,221.9 369.4,222.9 372.7,224.8 375.9,226.5 379.1,230.8 382.4,229.8 385.6,233.8 388.8,234.1 392.1,234.1 395.3,228.5 398.5,233.0 401.8,232.8 405.0,238.1 408.2,233.4 411.5,233.3 414.7,233.4 418.0,234.9 421.2,227.4 424.4,223.1 427.7,222.3 430.9,226.9 434.1,227.1 437.4,227.1 440.6,234.5 443.8,242.9 447.1,249.1 450.3,252.3 453.5,253.6 456.8,253.3 460.0,252.7 463.2,246.2 466.5,244.6 469.7,238.3 472.9,233.4 476.2,226.9 479.4,223.6 482.6,224.1 485.9,226.9 489.1,225.2 492.3,226.9 495.6,227.1 498.8,227.7 502.0,229.8 505.3,228.1 508.5,229.6 511.8,228.5 515.0,231.0 518.2,230.0 521.5,232.0 524.7,229.8 527.9,231.7 531.2,228.5 534.4,217.9 537.6,211.4 540.9,212.8 544.1,210.6 547.3,214.2 550.6,210.3 553.8,215.9 557.0,228.1 560.3,234.5 563.5,234.5 566.7,235.3 570.0,230.0 573.2,232.2 576.4,226.1 579.7,221.3 582.9,218.6 586.1,213.7 589.4,202.5 592.6,199.3 595.8,200.6 599.1,206.7 602.3,214.6 605.5,219.2 608.8,228.5 612.0,245.4 615.2,253.9 618.5,254.0 621.7,252.3 625.0,247.9 628.2,245.6 631.4,243.2 634.7,243.2 637.9,243.2 641.1,243.2 644.4,245.0 647.6,239.5 650.8,212.2 654.1,205.8 657.3,205.8 660.5,197.3 663.8,196.3 667.0,196.3 670.2,206.1 673.5,235.8 676.7,244.4 679.9,244.3 683.2,252.7 686.4,253.6 689.6,243.2 692.9,239.5 696.1,226.9 699.3,217.4 702.6,216.3 705.8,216.4 709.0,216.4 712.3,226.9 715.5,230.5 718.8,243.2 722.0,252.8 725.2,254.0 728.5,254.0 731.7,250.4 734.9,242.3 738.2,230.9 741.4,228.1 744.6,223.7 747.9,211.3 751.1,204.3 754.3,207.9 757.6,215.9 760.8,227.4 764.0,224.0 767.3,228.3 770.5,240.7 773.7,247.8 777.0,247.6 780.2,247.4 783.4,243.8 786.7,241.0 789.9,236.5 793.1,233.7 796.4,233.4 799.6,233.7 802.8,233.4 806.1,237.1 809.3,246.2 812.5,250.7 815.8,248.6 819.0,231.4 822.2,230.2 825.5,221.6 828.7,212.6 832.0,212.6 835.2,212.6 838.4,206.2 841.7,223.6 844.9,224.8 848.1,233.7 851.4,240.5 854.6,234.9 857.8,234.1 861.1,244.8 864.3,244.8 867.5,234.7 870.8,221.3 874.0,221.5"
+            fill="none" stroke="#e63946" stroke-width="2" stroke-linejoin="round" />
+        </svg></div>
+      <p class="take">Your busiest single day was <b>Apr 15, 2026</b> with <b>171</b> messages. You average <b>26.9</b>
+        messages a day and have texted on <b>203</b> of <b>257</b> days (78%).</p>
+    </section>
+    <section class="sec">
+      <h2><span class="num">03</span>When you talk</h2>
+      <p class="sub">Every message bucketed by day of week and hour of day — darker means more.</p>
+      <div class="chart-wrap"><svg viewBox="0 0 920 300" class="chart" role="img">
+          <rect x="44.0" y="20.0" width="35.1" height="35.6" fill="#faf4fa">
+            <title>Mon 00:00 — 1 msgs</title>
+          </rect>
+          <rect x="80.1" y="20.0" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Mon 01:00 — 0 msgs</title>
+          </rect>
+          <rect x="116.2" y="20.0" width="35.1" height="35.6" fill="#faf4fa">
+            <title>Mon 02:00 — 1 msgs</title>
+          </rect>
+          <rect x="152.2" y="20.0" width="35.1" height="35.6" fill="#faf4fa">
+            <title>Mon 03:00 — 1 msgs</title>
+          </rect>
+          <rect x="188.3" y="20.0" width="35.1" height="35.6" fill="#f4ebf6">
+            <title>Mon 04:00 — 7 msgs</title>
+          </rect>
+          <rect x="224.4" y="20.0" width="35.1" height="35.6" fill="#f7eff8">
+            <title>Mon 05:00 — 4 msgs</title>
+          </rect>
+          <rect x="260.5" y="20.0" width="35.1" height="35.6" fill="#e2d0ea">
+            <title>Mon 06:00 — 25 msgs</title>
+          </rect>
+          <rect x="296.6" y="20.0" width="35.1" height="35.6" fill="#d3b9e0">
+            <title>Mon 07:00 — 40 msgs</title>
+          </rect>
+          <rect x="332.7" y="20.0" width="35.1" height="35.6" fill="#c9aad9">
+            <title>Mon 08:00 — 50 msgs</title>
+          </rect>
+          <rect x="368.8" y="20.0" width="35.1" height="35.6" fill="#ceb2dc">
+            <title>Mon 09:00 — 45 msgs</title>
+          </rect>
+          <rect x="404.8" y="20.0" width="35.1" height="35.6" fill="#decae7">
+            <title>Mon 10:00 — 29 msgs</title>
+          </rect>
+          <rect x="440.9" y="20.0" width="35.1" height="35.6" fill="#ceb2dc">
+            <title>Mon 11:00 — 45 msgs</title>
+          </rect>
+          <rect x="477.0" y="20.0" width="35.1" height="35.6" fill="#cbadda">
+            <title>Mon 12:00 — 48 msgs</title>
+          </rect>
+          <rect x="513.1" y="20.0" width="35.1" height="35.6" fill="#b389ca">
+            <title>Mon 13:00 — 72 msgs</title>
+          </rect>
+          <rect x="549.2" y="20.0" width="35.1" height="35.6" fill="#b084c8">
+            <title>Mon 14:00 — 75 msgs</title>
+          </rect>
+          <rect x="585.2" y="20.0" width="35.1" height="35.6" fill="#8340aa">
+            <title>Mon 15:00 — 120 msgs</title>
+          </rect>
+          <rect x="621.3" y="20.0" width="35.1" height="35.6" fill="#b58ccc">
+            <title>Mon 16:00 — 70 msgs</title>
+          </rect>
+          <rect x="657.4" y="20.0" width="35.1" height="35.6" fill="#9e69bc">
+            <title>Mon 17:00 — 93 msgs</title>
+          </rect>
+          <rect x="693.5" y="20.0" width="35.1" height="35.6" fill="#b68dcc">
+            <title>Mon 18:00 — 69 msgs</title>
+          </rect>
+          <rect x="729.6" y="20.0" width="35.1" height="35.6" fill="#b287ca">
+            <title>Mon 19:00 — 73 msgs</title>
+          </rect>
+          <rect x="765.7" y="20.0" width="35.1" height="35.6" fill="#be99d2">
+            <title>Mon 20:00 — 61 msgs</title>
+          </rect>
+          <rect x="801.8" y="20.0" width="35.1" height="35.6" fill="#c19ed4">
+            <title>Mon 21:00 — 58 msgs</title>
+          </rect>
+          <rect x="837.8" y="20.0" width="35.1" height="35.6" fill="#dfcbe8">
+            <title>Mon 22:00 — 28 msgs</title>
+          </rect>
+          <rect x="873.9" y="20.0" width="35.1" height="35.6" fill="#f4ebf6">
+            <title>Mon 23:00 — 7 msgs</title>
+          </rect><text x="36" y="41.3" text-anchor="end" class="ax">Mon</text>
+          <rect x="44.0" y="56.6" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Tue 00:00 — 0 msgs</title>
+          </rect>
+          <rect x="80.1" y="56.6" width="35.1" height="35.6" fill="#faf4fa">
+            <title>Tue 01:00 — 1 msgs</title>
+          </rect>
+          <rect x="116.2" y="56.6" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Tue 02:00 — 0 msgs</title>
+          </rect>
+          <rect x="152.2" y="56.6" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Tue 03:00 — 0 msgs</title>
+          </rect>
+          <rect x="188.3" y="56.6" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Tue 04:00 — 0 msgs</title>
+          </rect>
+          <rect x="224.4" y="56.6" width="35.1" height="35.6" fill="#f0e5f3">
+            <title>Tue 05:00 — 11 msgs</title>
+          </rect>
+          <rect x="260.5" y="56.6" width="35.1" height="35.6" fill="#d9c2e4">
+            <title>Tue 06:00 — 34 msgs</title>
+          </rect>
+          <rect x="296.6" y="56.6" width="35.1" height="35.6" fill="#d5bce1">
+            <title>Tue 07:00 — 38 msgs</title>
+          </rect>
+          <rect x="332.7" y="56.6" width="35.1" height="35.6" fill="#bf9bd2">
+            <title>Tue 08:00 — 60 msgs</title>
+          </rect>
+          <rect x="368.8" y="56.6" width="35.1" height="35.6" fill="#cbadda">
+            <title>Tue 09:00 — 48 msgs</title>
+          </rect>
+          <rect x="404.8" y="56.6" width="35.1" height="35.6" fill="#caabda">
+            <title>Tue 10:00 — 49 msgs</title>
+          </rect>
+          <rect x="440.9" y="56.6" width="35.1" height="35.6" fill="#a472c0">
+            <title>Tue 11:00 — 87 msgs</title>
+          </rect>
+          <rect x="477.0" y="56.6" width="35.1" height="35.6" fill="#caabda">
+            <title>Tue 12:00 — 49 msgs</title>
+          </rect>
+          <rect x="513.1" y="56.6" width="35.1" height="35.6" fill="#ab7dc5">
+            <title>Tue 13:00 — 80 msgs</title>
+          </rect>
+          <rect x="549.2" y="56.6" width="35.1" height="35.6" fill="#9a63ba">
+            <title>Tue 14:00 — 97 msgs</title>
+          </rect>
+          <rect x="585.2" y="56.6" width="35.1" height="35.6" fill="#c3a1d5">
+            <title>Tue 15:00 — 56 msgs</title>
+          </rect>
+          <rect x="621.3" y="56.6" width="35.1" height="35.6" fill="#bc96d0">
+            <title>Tue 16:00 — 63 msgs</title>
+          </rect>
+          <rect x="657.4" y="56.6" width="35.1" height="35.6" fill="#9e69bc">
+            <title>Tue 17:00 — 93 msgs</title>
+          </rect>
+          <rect x="693.5" y="56.6" width="35.1" height="35.6" fill="#6a1b9a">
+            <title>Tue 18:00 — 145 msgs</title>
+          </rect>
+          <rect x="729.6" y="56.6" width="35.1" height="35.6" fill="#8645ac">
+            <title>Tue 19:00 — 117 msgs</title>
+          </rect>
+          <rect x="765.7" y="56.6" width="35.1" height="35.6" fill="#b58ccc">
+            <title>Tue 20:00 — 70 msgs</title>
+          </rect>
+          <rect x="801.8" y="56.6" width="35.1" height="35.6" fill="#ab7dc5">
+            <title>Tue 21:00 — 80 msgs</title>
+          </rect>
+          <rect x="837.8" y="56.6" width="35.1" height="35.6" fill="#bc96d0">
+            <title>Tue 22:00 — 63 msgs</title>
+          </rect>
+          <rect x="873.9" y="56.6" width="35.1" height="35.6" fill="#faf4fa">
+            <title>Tue 23:00 — 1 msgs</title>
+          </rect><text x="36" y="77.9" text-anchor="end" class="ax">Tue</text>
+          <rect x="44.0" y="93.1" width="35.1" height="35.6" fill="#f8f1f8">
+            <title>Wed 00:00 — 3 msgs</title>
+          </rect>
+          <rect x="80.1" y="93.1" width="35.1" height="35.6" fill="#f9f2f9">
+            <title>Wed 01:00 — 2 msgs</title>
+          </rect>
+          <rect x="116.2" y="93.1" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Wed 02:00 — 0 msgs</title>
+          </rect>
+          <rect x="152.2" y="93.1" width="35.1" height="35.6" fill="#f8f1f8">
+            <title>Wed 03:00 — 3 msgs</title>
+          </rect>
+          <rect x="188.3" y="93.1" width="35.1" height="35.6" fill="#f5ecf6">
+            <title>Wed 04:00 — 6 msgs</title>
+          </rect>
+          <rect x="224.4" y="93.1" width="35.1" height="35.6" fill="#eee2f2">
+            <title>Wed 05:00 — 13 msgs</title>
+          </rect>
+          <rect x="260.5" y="93.1" width="35.1" height="35.6" fill="#c6a5d7">
+            <title>Wed 06:00 — 53 msgs</title>
+          </rect>
+          <rect x="296.6" y="93.1" width="35.1" height="35.6" fill="#ad80c6">
+            <title>Wed 07:00 — 78 msgs</title>
+          </rect>
+          <rect x="332.7" y="93.1" width="35.1" height="35.6" fill="#ba93cf">
+            <title>Wed 08:00 — 65 msgs</title>
+          </rect>
+          <rect x="368.8" y="93.1" width="35.1" height="35.6" fill="#d6bee2">
+            <title>Wed 09:00 — 37 msgs</title>
+          </rect>
+          <rect x="404.8" y="93.1" width="35.1" height="35.6" fill="#d6bee2">
+            <title>Wed 10:00 — 37 msgs</title>
+          </rect>
+          <rect x="440.9" y="93.1" width="35.1" height="35.6" fill="#c19ed4">
+            <title>Wed 11:00 — 58 msgs</title>
+          </rect>
+          <rect x="477.0" y="93.1" width="35.1" height="35.6" fill="#8543ac">
+            <title>Wed 12:00 — 118 msgs</title>
+          </rect>
+          <rect x="513.1" y="93.1" width="35.1" height="35.6" fill="#945ab6">
+            <title>Wed 13:00 — 103 msgs</title>
+          </rect>
+          <rect x="549.2" y="93.1" width="35.1" height="35.6" fill="#c3a1d5">
+            <title>Wed 14:00 — 56 msgs</title>
+          </rect>
+          <rect x="585.2" y="93.1" width="35.1" height="35.6" fill="#b186c9">
+            <title>Wed 15:00 — 74 msgs</title>
+          </rect>
+          <rect x="621.3" y="93.1" width="35.1" height="35.6" fill="#b389ca">
+            <title>Wed 16:00 — 72 msgs</title>
+          </rect>
+          <rect x="657.4" y="93.1" width="35.1" height="35.6" fill="#8949ae">
+            <title>Wed 17:00 — 114 msgs</title>
+          </rect>
+          <rect x="693.5" y="93.1" width="35.1" height="35.6" fill="#c5a4d6">
+            <title>Wed 18:00 — 54 msgs</title>
+          </rect>
+          <rect x="729.6" y="93.1" width="35.1" height="35.6" fill="#c19ed4">
+            <title>Wed 19:00 — 58 msgs</title>
+          </rect>
+          <rect x="765.7" y="93.1" width="35.1" height="35.6" fill="#c3a1d5">
+            <title>Wed 20:00 — 56 msgs</title>
+          </rect>
+          <rect x="801.8" y="93.1" width="35.1" height="35.6" fill="#cbadda">
+            <title>Wed 21:00 — 48 msgs</title>
+          </rect>
+          <rect x="837.8" y="93.1" width="35.1" height="35.6" fill="#d8c1e3">
+            <title>Wed 22:00 — 35 msgs</title>
+          </rect>
+          <rect x="873.9" y="93.1" width="35.1" height="35.6" fill="#f8f1f8">
+            <title>Wed 23:00 — 3 msgs</title>
+          </rect><text x="36" y="114.4" text-anchor="end" class="ax">Wed</text>
+          <rect x="44.0" y="129.7" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Thu 00:00 — 0 msgs</title>
+          </rect>
+          <rect x="80.1" y="129.7" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Thu 01:00 — 0 msgs</title>
+          </rect>
+          <rect x="116.2" y="129.7" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Thu 02:00 — 0 msgs</title>
+          </rect>
+          <rect x="152.2" y="129.7" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Thu 03:00 — 0 msgs</title>
+          </rect>
+          <rect x="188.3" y="129.7" width="35.1" height="35.6" fill="#f8f1f8">
+            <title>Thu 04:00 — 3 msgs</title>
+          </rect>
+          <rect x="224.4" y="129.7" width="35.1" height="35.6" fill="#e6d6ec">
+            <title>Thu 05:00 — 21 msgs</title>
+          </rect>
+          <rect x="260.5" y="129.7" width="35.1" height="35.6" fill="#f7eff8">
+            <title>Thu 06:00 — 4 msgs</title>
+          </rect>
+          <rect x="296.6" y="129.7" width="35.1" height="35.6" fill="#c6a5d7">
+            <title>Thu 07:00 — 53 msgs</title>
+          </rect>
+          <rect x="332.7" y="129.7" width="35.1" height="35.6" fill="#c09cd3">
+            <title>Thu 08:00 — 59 msgs</title>
+          </rect>
+          <rect x="368.8" y="129.7" width="35.1" height="35.6" fill="#d6bee2">
+            <title>Thu 09:00 — 37 msgs</title>
+          </rect>
+          <rect x="404.8" y="129.7" width="35.1" height="35.6" fill="#c4a2d6">
+            <title>Thu 10:00 — 55 msgs</title>
+          </rect>
+          <rect x="440.9" y="129.7" width="35.1" height="35.6" fill="#c29fd4">
+            <title>Thu 11:00 — 57 msgs</title>
+          </rect>
+          <rect x="477.0" y="129.7" width="35.1" height="35.6" fill="#d2b8df">
+            <title>Thu 12:00 — 41 msgs</title>
+          </rect>
+          <rect x="513.1" y="129.7" width="35.1" height="35.6" fill="#c6a5d7">
+            <title>Thu 13:00 — 53 msgs</title>
+          </rect>
+          <rect x="549.2" y="129.7" width="35.1" height="35.6" fill="#a472c0">
+            <title>Thu 14:00 — 87 msgs</title>
+          </rect>
+          <rect x="585.2" y="129.7" width="35.1" height="35.6" fill="#ac7ec6">
+            <title>Thu 15:00 — 79 msgs</title>
+          </rect>
+          <rect x="621.3" y="129.7" width="35.1" height="35.6" fill="#a574c1">
+            <title>Thu 16:00 — 86 msgs</title>
+          </rect>
+          <rect x="657.4" y="129.7" width="35.1" height="35.6" fill="#9961b9">
+            <title>Thu 17:00 — 98 msgs</title>
+          </rect>
+          <rect x="693.5" y="129.7" width="35.1" height="35.6" fill="#c3a1d5">
+            <title>Thu 18:00 — 56 msgs</title>
+          </rect>
+          <rect x="729.6" y="129.7" width="35.1" height="35.6" fill="#b68dcc">
+            <title>Thu 19:00 — 69 msgs</title>
+          </rect>
+          <rect x="765.7" y="129.7" width="35.1" height="35.6" fill="#c09cd3">
+            <title>Thu 20:00 — 59 msgs</title>
+          </rect>
+          <rect x="801.8" y="129.7" width="35.1" height="35.6" fill="#ae81c7">
+            <title>Thu 21:00 — 77 msgs</title>
+          </rect>
+          <rect x="837.8" y="129.7" width="35.1" height="35.6" fill="#ecdff0">
+            <title>Thu 22:00 — 15 msgs</title>
+          </rect>
+          <rect x="873.9" y="129.7" width="35.1" height="35.6" fill="#f3e9f5">
+            <title>Thu 23:00 — 8 msgs</title>
+          </rect><text x="36" y="151.0" text-anchor="end" class="ax">Thu</text>
+          <rect x="44.0" y="166.3" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Fri 00:00 — 0 msgs</title>
+          </rect>
+          <rect x="80.1" y="166.3" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Fri 01:00 — 0 msgs</title>
+          </rect>
+          <rect x="116.2" y="166.3" width="35.1" height="35.6" fill="#e4d3eb">
+            <title>Fri 02:00 — 23 msgs</title>
+          </rect>
+          <rect x="152.2" y="166.3" width="35.1" height="35.6" fill="#f0e5f3">
+            <title>Fri 03:00 — 11 msgs</title>
+          </rect>
+          <rect x="188.3" y="166.3" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Fri 04:00 — 0 msgs</title>
+          </rect>
+          <rect x="224.4" y="166.3" width="35.1" height="35.6" fill="#f2e8f4">
+            <title>Fri 05:00 — 9 msgs</title>
+          </rect>
+          <rect x="260.5" y="166.3" width="35.1" height="35.6" fill="#dac4e4">
+            <title>Fri 06:00 — 33 msgs</title>
+          </rect>
+          <rect x="296.6" y="166.3" width="35.1" height="35.6" fill="#c3a1d5">
+            <title>Fri 07:00 — 56 msgs</title>
+          </rect>
+          <rect x="332.7" y="166.3" width="35.1" height="35.6" fill="#c3a1d5">
+            <title>Fri 08:00 — 56 msgs</title>
+          </rect>
+          <rect x="368.8" y="166.3" width="35.1" height="35.6" fill="#c29fd4">
+            <title>Fri 09:00 — 57 msgs</title>
+          </rect>
+          <rect x="404.8" y="166.3" width="35.1" height="35.6" fill="#a26fbf">
+            <title>Fri 10:00 — 89 msgs</title>
+          </rect>
+          <rect x="440.9" y="166.3" width="35.1" height="35.6" fill="#b58ccc">
+            <title>Fri 11:00 — 70 msgs</title>
+          </rect>
+          <rect x="477.0" y="166.3" width="35.1" height="35.6" fill="#dfcbe8">
+            <title>Fri 12:00 — 28 msgs</title>
+          </rect>
+          <rect x="513.1" y="166.3" width="35.1" height="35.6" fill="#be99d2">
+            <title>Fri 13:00 — 61 msgs</title>
+          </rect>
+          <rect x="549.2" y="166.3" width="35.1" height="35.6" fill="#9e69bc">
+            <title>Fri 14:00 — 93 msgs</title>
+          </rect>
+          <rect x="585.2" y="166.3" width="35.1" height="35.6" fill="#8645ac">
+            <title>Fri 15:00 — 117 msgs</title>
+          </rect>
+          <rect x="621.3" y="166.3" width="35.1" height="35.6" fill="#8746ad">
+            <title>Fri 16:00 — 116 msgs</title>
+          </rect>
+          <rect x="657.4" y="166.3" width="35.1" height="35.6" fill="#8d4fb1">
+            <title>Fri 17:00 — 110 msgs</title>
+          </rect>
+          <rect x="693.5" y="166.3" width="35.1" height="35.6" fill="#a26fbf">
+            <title>Fri 18:00 — 89 msgs</title>
+          </rect>
+          <rect x="729.6" y="166.3" width="35.1" height="35.6" fill="#a371c0">
+            <title>Fri 19:00 — 88 msgs</title>
+          </rect>
+          <rect x="765.7" y="166.3" width="35.1" height="35.6" fill="#9860b8">
+            <title>Fri 20:00 — 99 msgs</title>
+          </rect>
+          <rect x="801.8" y="166.3" width="35.1" height="35.6" fill="#d0b5de">
+            <title>Fri 21:00 — 43 msgs</title>
+          </rect>
+          <rect x="837.8" y="166.3" width="35.1" height="35.6" fill="#dcc7e6">
+            <title>Fri 22:00 — 31 msgs</title>
+          </rect>
+          <rect x="873.9" y="166.3" width="35.1" height="35.6" fill="#f5ecf6">
+            <title>Fri 23:00 — 6 msgs</title>
+          </rect><text x="36" y="187.6" text-anchor="end" class="ax">Fri</text>
+          <rect x="44.0" y="202.9" width="35.1" height="35.6" fill="#faf4fa">
+            <title>Sat 00:00 — 1 msgs</title>
+          </rect>
+          <rect x="80.1" y="202.9" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Sat 01:00 — 0 msgs</title>
+          </rect>
+          <rect x="116.2" y="202.9" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Sat 02:00 — 0 msgs</title>
+          </rect>
+          <rect x="152.2" y="202.9" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Sat 03:00 — 0 msgs</title>
+          </rect>
+          <rect x="188.3" y="202.9" width="35.1" height="35.6" fill="#faf4fa">
+            <title>Sat 04:00 — 1 msgs</title>
+          </rect>
+          <rect x="224.4" y="202.9" width="35.1" height="35.6" fill="#f8f1f8">
+            <title>Sat 05:00 — 3 msgs</title>
+          </rect>
+          <rect x="260.5" y="202.9" width="35.1" height="35.6" fill="#f3e9f5">
+            <title>Sat 06:00 — 8 msgs</title>
+          </rect>
+          <rect x="296.6" y="202.9" width="35.1" height="35.6" fill="#e9daee">
+            <title>Sat 07:00 — 18 msgs</title>
+          </rect>
+          <rect x="332.7" y="202.9" width="35.1" height="35.6" fill="#d3b9e0">
+            <title>Sat 08:00 — 40 msgs</title>
+          </rect>
+          <rect x="368.8" y="202.9" width="35.1" height="35.6" fill="#c9aad9">
+            <title>Sat 09:00 — 50 msgs</title>
+          </rect>
+          <rect x="404.8" y="202.9" width="35.1" height="35.6" fill="#dfcbe8">
+            <title>Sat 10:00 — 28 msgs</title>
+          </rect>
+          <rect x="440.9" y="202.9" width="35.1" height="35.6" fill="#e6d6ec">
+            <title>Sat 11:00 — 21 msgs</title>
+          </rect>
+          <rect x="477.0" y="202.9" width="35.1" height="35.6" fill="#ede0f1">
+            <title>Sat 12:00 — 14 msgs</title>
+          </rect>
+          <rect x="513.1" y="202.9" width="35.1" height="35.6" fill="#d4bbe0">
+            <title>Sat 13:00 — 39 msgs</title>
+          </rect>
+          <rect x="549.2" y="202.9" width="35.1" height="35.6" fill="#d2b8df">
+            <title>Sat 14:00 — 41 msgs</title>
+          </rect>
+          <rect x="585.2" y="202.9" width="35.1" height="35.6" fill="#d1b6de">
+            <title>Sat 15:00 — 42 msgs</title>
+          </rect>
+          <rect x="621.3" y="202.9" width="35.1" height="35.6" fill="#d4bbe0">
+            <title>Sat 16:00 — 39 msgs</title>
+          </rect>
+          <rect x="657.4" y="202.9" width="35.1" height="35.6" fill="#c5a4d6">
+            <title>Sat 17:00 — 54 msgs</title>
+          </rect>
+          <rect x="693.5" y="202.9" width="35.1" height="35.6" fill="#c7a7d8">
+            <title>Sat 18:00 — 52 msgs</title>
+          </rect>
+          <rect x="729.6" y="202.9" width="35.1" height="35.6" fill="#c4a2d6">
+            <title>Sat 19:00 — 55 msgs</title>
+          </rect>
+          <rect x="765.7" y="202.9" width="35.1" height="35.6" fill="#ceb2dc">
+            <title>Sat 20:00 — 45 msgs</title>
+          </rect>
+          <rect x="801.8" y="202.9" width="35.1" height="35.6" fill="#c7a7d8">
+            <title>Sat 21:00 — 52 msgs</title>
+          </rect>
+          <rect x="837.8" y="202.9" width="35.1" height="35.6" fill="#d1b6de">
+            <title>Sat 22:00 — 42 msgs</title>
+          </rect>
+          <rect x="873.9" y="202.9" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Sat 23:00 — 0 msgs</title>
+          </rect><text x="36" y="224.1" text-anchor="end" class="ax">Sat</text>
+          <rect x="44.0" y="239.4" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Sun 00:00 — 0 msgs</title>
+          </rect>
+          <rect x="80.1" y="239.4" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Sun 01:00 — 0 msgs</title>
+          </rect>
+          <rect x="116.2" y="239.4" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Sun 02:00 — 0 msgs</title>
+          </rect>
+          <rect x="152.2" y="239.4" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Sun 03:00 — 0 msgs</title>
+          </rect>
+          <rect x="188.3" y="239.4" width="35.1" height="35.6" fill="#fbf6fb">
+            <title>Sun 04:00 — 0 msgs</title>
+          </rect>
+          <rect x="224.4" y="239.4" width="35.1" height="35.6" fill="#faf4fa">
+            <title>Sun 05:00 — 1 msgs</title>
+          </rect>
+          <rect x="260.5" y="239.4" width="35.1" height="35.6" fill="#ede0f1">
+            <title>Sun 06:00 — 14 msgs</title>
+          </rect>
+          <rect x="296.6" y="239.4" width="35.1" height="35.6" fill="#ebddf0">
+            <title>Sun 07:00 — 16 msgs</title>
+          </rect>
+          <rect x="332.7" y="239.4" width="35.1" height="35.6" fill="#e2d0ea">
+            <title>Sun 08:00 — 25 msgs</title>
+          </rect>
+          <rect x="368.8" y="239.4" width="35.1" height="35.6" fill="#d5bce1">
+            <title>Sun 09:00 — 38 msgs</title>
+          </rect>
+          <rect x="404.8" y="239.4" width="35.1" height="35.6" fill="#d7bfe2">
+            <title>Sun 10:00 — 36 msgs</title>
+          </rect>
+          <rect x="440.9" y="239.4" width="35.1" height="35.6" fill="#d8c1e3">
+            <title>Sun 11:00 — 35 msgs</title>
+          </rect>
+          <rect x="477.0" y="239.4" width="35.1" height="35.6" fill="#e2d0ea">
+            <title>Sun 12:00 — 25 msgs</title>
+          </rect>
+          <rect x="513.1" y="239.4" width="35.1" height="35.6" fill="#cdb0dc">
+            <title>Sun 13:00 — 46 msgs</title>
+          </rect>
+          <rect x="549.2" y="239.4" width="35.1" height="35.6" fill="#d4bbe0">
+            <title>Sun 14:00 — 39 msgs</title>
+          </rect>
+          <rect x="585.2" y="239.4" width="35.1" height="35.6" fill="#e4d3eb">
+            <title>Sun 15:00 — 23 msgs</title>
+          </rect>
+          <rect x="621.3" y="239.4" width="35.1" height="35.6" fill="#e0cde8">
+            <title>Sun 16:00 — 27 msgs</title>
+          </rect>
+          <rect x="657.4" y="239.4" width="35.1" height="35.6" fill="#d5bce1">
+            <title>Sun 17:00 — 38 msgs</title>
+          </rect>
+          <rect x="693.5" y="239.4" width="35.1" height="35.6" fill="#e1cee9">
+            <title>Sun 18:00 — 26 msgs</title>
+          </rect>
+          <rect x="729.6" y="239.4" width="35.1" height="35.6" fill="#ddc8e6">
+            <title>Sun 19:00 — 30 msgs</title>
+          </rect>
+          <rect x="765.7" y="239.4" width="35.1" height="35.6" fill="#e0cde8">
+            <title>Sun 20:00 — 27 msgs</title>
+          </rect>
+          <rect x="801.8" y="239.4" width="35.1" height="35.6" fill="#c8a8d8">
+            <title>Sun 21:00 — 51 msgs</title>
+          </rect>
+          <rect x="837.8" y="239.4" width="35.1" height="35.6" fill="#e1cee9">
+            <title>Sun 22:00 — 26 msgs</title>
+          </rect>
+          <rect x="873.9" y="239.4" width="35.1" height="35.6" fill="#dfcbe8">
+            <title>Sun 23:00 — 28 msgs</title>
+          </rect><text x="36" y="260.7" text-anchor="end" class="ax">Sun</text><text x="62.0" y="294"
+            text-anchor="middle" class="ax">00</text><text x="170.3" y="294" text-anchor="middle"
+            class="ax">03</text><text x="278.5" y="294" text-anchor="middle" class="ax">06</text><text x="386.8" y="294"
+            text-anchor="middle" class="ax">09</text><text x="495.0" y="294" text-anchor="middle"
+            class="ax">12</text><text x="603.3" y="294" text-anchor="middle" class="ax">15</text><text x="711.5" y="294"
+            text-anchor="middle" class="ax">18</text><text x="819.8" y="294" text-anchor="middle" class="ax">21</text>
+        </svg></div>
+      <p class="take">Your peak texting hour is <b>5 PM</b>.</p>
+    </section>
+    <section class="sec">
+      <h2><span class="num">04</span>What you talk about</h2>
+      <p class="sub">Most frequent words after removing common filler/stop-words. Size reflects frequency.</p>
+      <div class="cloud"><span class="w" style="font-size:3.40rem;opacity:1.00">love</span> <span class="w"
+          style="font-size:1.93rem;opacity:0.74">feel</span> <span class="w"
+          style="font-size:1.79rem;opacity:0.72">morning</span> <span class="w"
+          style="font-size:1.76rem;opacity:0.72">night</span> <span class="w"
+          style="font-size:1.64rem;opacity:0.69">baby</span> <span class="w"
+          style="font-size:1.63rem;opacity:0.69">oh</span> <span class="w"
+          style="font-size:1.62rem;opacity:0.69">work</span> <span class="w"
+          style="font-size:1.60rem;opacity:0.69">better</span> <span class="w"
+          style="font-size:1.59rem;opacity:0.69">babe</span> <span class="w"
+          style="font-size:1.57rem;opacity:0.68">yes</span> <span class="w"
+          style="font-size:1.52rem;opacity:0.67">tonight</span> <span class="w"
+          style="font-size:1.52rem;opacity:0.67">take</span> <span class="w"
+          style="font-size:1.48rem;opacity:0.67">home</span> <span class="w"
+          style="font-size:1.46rem;opacity:0.66">hard</span> <span class="w"
+          style="font-size:1.46rem;opacity:0.66">sorry</span> <span class="w"
+          style="font-size:1.46rem;opacity:0.66">sleep</span> <span class="w"
+          style="font-size:1.45rem;opacity:0.66">sure</span> <span class="w"
+          style="font-size:1.44rem;opacity:0.66">bed</span> <span class="w"
+          style="font-size:1.44rem;opacity:0.66">kids</span> <span class="w"
+          style="font-size:1.43rem;opacity:0.66">hey</span> <span class="w"
+          style="font-size:1.43rem;opacity:0.66">feeling</span> <span class="w"
+          style="font-size:1.42rem;opacity:0.66">always</span> <span class="w"
+          style="font-size:1.42rem;opacity:0.66">hope</span> <span class="w"
+          style="font-size:1.41rem;opacity:0.66">wait</span> <span class="w"
+          style="font-size:1.39rem;opacity:0.65">last</span> <span class="w"
+          style="font-size:1.38rem;opacity:0.65">great</span> <span class="w"
+          style="font-size:1.36rem;opacity:0.65">sexy</span> <span class="w"
+          style="font-size:1.32rem;opacity:0.64">though</span> <span class="w"
+          style="font-size:1.31rem;opacity:0.64">thinking</span> <span class="w"
+          style="font-size:1.31rem;opacity:0.64">done</span> <span class="w"
+          style="font-size:1.31rem;opacity:0.64">pretty</span> <span class="w"
+          style="font-size:1.29rem;opacity:0.63">maybe</span> <span class="w"
+          style="font-size:1.28rem;opacity:0.63">glad</span> <span class="w"
+          style="font-size:1.28rem;opacity:0.63">definitely</span> <span class="w"
+          style="font-size:1.28rem;opacity:0.63">fuck</span> <span class="w"
+          style="font-size:1.25rem;opacity:0.63">little</span> <span class="w"
+          style="font-size:1.21rem;opacity:0.62">beautiful</span> <span class="w"
+          style="font-size:1.20rem;opacity:0.62">daddy</span> <span class="w"
+          style="font-size:1.20rem;opacity:0.62">nice</span> <span class="w"
+          style="font-size:1.20rem;opacity:0.62">fun</span> <span class="w"
+          style="font-size:1.18rem;opacity:0.62">sounds</span> <span class="w"
+          style="font-size:1.17rem;opacity:0.61">getting</span> <span class="w"
+          style="font-size:1.17rem;opacity:0.61">sick</span> <span class="w"
+          style="font-size:1.17rem;opacity:0.61">give</span> <span class="w"
+          style="font-size:1.16rem;opacity:0.61">soon</span> <span class="w"
+          style="font-size:1.15rem;opacity:0.61">miss</span> <span class="w"
+          style="font-size:1.15rem;opacity:0.61">keep</span> <span class="w"
+          style="font-size:1.14rem;opacity:0.61">cock</span></div>
+      <div class="chart-wrap"><svg viewBox="0 0 920 420" class="chart" role="img">
+          <rect x="150" y="25.0" width="178.9" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="36.4"
+            text-anchor="end" class="ax">bed</text><text x="334.9" y="36.4" class="ax">146</text>
+          <rect x="150" y="45.8" width="180.1" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="57.2"
+            text-anchor="end" class="ax">sure</text><text x="336.1" y="57.2" class="ax">147</text>
+          <rect x="150" y="66.6" width="182.5" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="77.9"
+            text-anchor="end" class="ax">sleep</text><text x="338.5" y="77.9" class="ax">149</text>
+          <rect x="150" y="87.3" width="182.5" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="98.7"
+            text-anchor="end" class="ax">sorry</text><text x="338.5" y="98.7" class="ax">149</text>
+          <rect x="150" y="108.1" width="185.0" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="119.5"
+            text-anchor="end" class="ax">hard</text><text x="341.0" y="119.5" class="ax">151</text>
+          <rect x="150" y="128.9" width="188.7" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="140.3"
+            text-anchor="end" class="ax">home</text><text x="344.7" y="140.3" class="ax">154</text>
+          <rect x="150" y="149.7" width="199.7" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="161.1"
+            text-anchor="end" class="ax">take</text><text x="355.7" y="161.1" class="ax">163</text>
+          <rect x="150" y="170.4" width="200.9" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="181.8"
+            text-anchor="end" class="ax">tonight</text><text x="356.9" y="181.8" class="ax">164</text>
+          <rect x="150" y="191.2" width="214.4" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="202.6"
+            text-anchor="end" class="ax">yes</text><text x="370.4" y="202.6" class="ax">175</text>
+          <rect x="150" y="212.0" width="219.3" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="223.4"
+            text-anchor="end" class="ax">babe</text><text x="375.3" y="223.4" class="ax">179</text>
+          <rect x="150" y="232.8" width="223.0" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="244.2"
+            text-anchor="end" class="ax">better</text><text x="379.0" y="244.2" class="ax">182</text>
+          <rect x="150" y="253.6" width="229.1" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="264.9"
+            text-anchor="end" class="ax">work</text><text x="385.1" y="264.9" class="ax">187</text>
+          <rect x="150" y="274.3" width="230.3" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="285.7"
+            text-anchor="end" class="ax">oh</text><text x="386.3" y="285.7" class="ax">188</text>
+          <rect x="150" y="295.1" width="232.8" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="306.5"
+            text-anchor="end" class="ax">baby</text><text x="388.8" y="306.5" class="ax">190</text>
+          <rect x="150" y="315.9" width="267.1" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="327.3"
+            text-anchor="end" class="ax">night</text><text x="423.1" y="327.3" class="ax">218</text>
+          <rect x="150" y="336.7" width="276.9" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="348.1"
+            text-anchor="end" class="ax">morning</text><text x="432.9" y="348.1" class="ax">226</text>
+          <rect x="150" y="357.4" width="313.6" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="368.8"
+            text-anchor="end" class="ax">feel</text><text x="469.6" y="368.8" class="ax">256</text>
+          <rect x="150" y="378.2" width="724.0" height="14.8" rx="3" fill="#9d4edd" /><text x="142" y="389.6"
+            text-anchor="end" class="ax">love</text><text x="880.0" y="389.6" class="ax">591</text>
+        </svg></div>
+    </section>
+    <section class="sec">
+      <h2><span class="num">05</span>Common phrases</h2>
+      <p class="sub">Most-repeated sayings of four or more words. Overlapping fragments of the same expression are
+        stitched together and counted once, so each row is a whole phrase.</p>
+      <div class="phrase-cols phrase-cols-2">
+        <div class="phrase-card">
+          <ol class="phrase-list">
+            <li><span class="pl-bar" style="width:100%"></span><span class="pl-t">i can&#x27;t wait to see
+                you</span><span class="pl-c">64</span></li>
+            <li><span class="pl-bar" style="width:72%"></span><span class="pl-t">what are you up to</span><span
+                class="pl-c">46</span></li>
+            <li><span class="pl-bar" style="width:58%"></span><span class="pl-t">how&#x27;s your day going</span><span
+                class="pl-c">37</span></li>
+            <li><span class="pl-bar" style="width:56%"></span><span class="pl-t">how is your day</span><span
+                class="pl-c">36</span></li>
+            <li><span class="pl-bar" style="width:53%"></span><span class="pl-t">how are you feeling</span><span
+                class="pl-c">34</span></li>
+            <li><span class="pl-bar" style="width:34%"></span><span class="pl-t">i&#x27;d love to see you</span><span
+                class="pl-c">22</span></li>
+            <li><span class="pl-bar" style="width:34%"></span><span class="pl-t">do you want me to</span><span
+                class="pl-c">22</span></li>
+            <li><span class="pl-bar" style="width:33%"></span><span class="pl-t">i hope you have a great day</span><span
+                class="pl-c">21</span></li>
+          </ol>
+        </div>
+        <div class="phrase-card">
+          <ol class="phrase-list">
+            <li><span class="pl-bar" style="width:33%"></span><span class="pl-t">i would love to</span><span
+                class="pl-c">21</span></li>
+            <li><span class="pl-bar" style="width:27%"></span><span class="pl-t">how&#x27;s your day been</span><span
+                class="pl-c">17</span></li>
+            <li><span class="pl-bar" style="width:27%"></span><span class="pl-t">take care of</span><span
+                class="pl-c">17</span></li>
+            <li><span class="pl-bar" style="width:22%"></span><span class="pl-t">i hope you feel better</span><span
+                class="pl-c">14</span></li>
+            <li><span class="pl-bar" style="width:22%"></span><span class="pl-t">going to have to</span><span
+                class="pl-c">14</span></li>
+            <li><span class="pl-bar" style="width:22%"></span><span class="pl-t">i want you to</span><span
+                class="pl-c">14</span></li>
+            <li><span class="pl-bar" style="width:22%"></span><span class="pl-t">my day has been</span><span
+                class="pl-c">14</span></li>
+            <li><span class="pl-bar" style="width:20%"></span><span class="pl-t">i just want to</span><span
+                class="pl-c">13</span></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+    <section class="sec">
+      <h2><span class="num">06</span>Emotional tone over time</h2>
+      <p class="sub">Average message sentiment per week (read and scored message-by-message by Claude). 0 is neutral;
+        higher is more positive.</p>
+      <div class="chart-wrap"><svg viewBox="0 0 920 300" class="chart" role="img">
+          <line x1="46" y1="254.0" x2="874" y2="254.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="258.0"
+            text-anchor="end" class="ax">-0.47</text>
+          <line x1="46" y1="202.0" x2="874" y2="202.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="206.0"
+            text-anchor="end" class="ax">-0.24</text>
+          <line x1="46" y1="150.0" x2="874" y2="150.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="154.0"
+            text-anchor="end" class="ax">+0.00</text>
+          <line x1="46" y1="98.0" x2="874" y2="98.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="102.0"
+            text-anchor="end" class="ax">+0.24</text>
+          <line x1="46" y1="46.0" x2="874" y2="46.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="50.0"
+            text-anchor="end" class="ax">+0.47</text>
+          <line x1="46" y1="150.0" x2="874" y2="150.0" stroke="#8a7f88" stroke-width="1" stroke-dasharray="3 3" />
+          <line x1="46.0" y1="46" x2="46.0" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="46.0" y="272"
+            text-anchor="middle" class="ax">Oct</text>
+          <line x1="138.0" y1="46" x2="138.0" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="138.0" y="272"
+            text-anchor="middle" class="ax">Nov</text>
+          <line x1="230.0" y1="46" x2="230.0" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="230.0" y="272"
+            text-anchor="middle" class="ax">Dec</text>
+          <line x1="345.0" y1="46" x2="345.0" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="345.0" y="272"
+            text-anchor="middle" class="ax">Jan</text>
+          <line x1="437.0" y1="46" x2="437.0" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="437.0" y="272"
+            text-anchor="middle" class="ax">Feb</text>
+          <line x1="529.0" y1="46" x2="529.0" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="529.0" y="272"
+            text-anchor="middle" class="ax">Mar</text>
+          <line x1="621.0" y1="46" x2="621.0" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="621.0" y="272"
+            text-anchor="middle" class="ax">Apr</text>
+          <line x1="713.0" y1="46" x2="713.0" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="713.0" y="272"
+            text-anchor="middle" class="ax">May</text>
+          <line x1="805.0" y1="46" x2="805.0" y2="254" stroke="#eadfe6" stroke-width="1" /><text x="805.0" y="272"
+            text-anchor="middle" class="ax">Jun</text>
+          <polyline
+            points="46.0,77.3 69.0,61.8 92.0,63.1 115.0,56.1 138.0,49.1 161.0,46.0 184.0,57.8 207.0,69.2 230.0,68.1 253.0,74.0 276.0,76.7 299.0,66.6 322.0,74.9 345.0,77.7 368.0,87.8 391.0,67.5 414.0,85.4 437.0,95.3 460.0,123.9 483.0,92.2 506.0,85.2 529.0,105.6 552.0,133.8 575.0,136.0 598.0,129.4 621.0,174.1 644.0,73.4 667.0,139.1 690.0,103.4 713.0,94.2 736.0,115.8 759.0,93.7 782.0,90.7 805.0,84.5 828.0,85.8 851.0,83.2 874.0,71.8"
+            fill="none" stroke="#e63946" stroke-width="2" stroke-linejoin="round" />
+        </svg></div>
+      <p class="take">Overall tone is <b>+0.32</b> and <b>85.0%</b> of messages skew positive. Garrett averages
+        <b>+0.38</b>, Lisa <b>+0.27</b>. The warmest day was <b>Jan 9, 2026</b>.</p>
+      <div class="milestone">
+        <div class="mi-date">Jan 9, 2026<div class="mi-score">sentiment +0.90</div>
+        </div>
+        <div class="mi-body"><b>Brightest message on the warmest day</b> — said by Garrett<div class="quote">“Aw 🥰 I
+            love you too baby. I can&#x27;t wait to have a fun weekend with you 😘”</div>
+        </div>
+      </div>
+    </section>
+    <section class="sec">
+      <h2><span class="num">07</span>Emoji leaderboard</h2>
+      <p class="sub">Most-used emoji across all messages, plus each person's signature picks.</p>
+      <div class="emoji-grid">
+        <div class="emoji-item"><span class="e">😘</span><span class="en">Blowing a kiss</span><span
+            class="ec">337</span></div>
+        <div class="emoji-item"><span class="e">😉</span><span class="en">Winking</span><span class="ec">171</span>
+        </div>
+        <div class="emoji-item"><span class="e">😂</span><span class="en">Face with tears of joy</span><span
+            class="ec">106</span></div>
+        <div class="emoji-item"><span class="e">🥰</span><span class="en">Smiling with hearts</span><span
+            class="ec">85</span></div>
+        <div class="emoji-item"><span class="e">🥵</span><span class="en"></span><span class="ec">78</span></div>
+        <div class="emoji-item"><span class="e">😍</span><span class="en">Heart-eyes</span><span class="ec">64</span>
+        </div>
+        <div class="emoji-item"><span class="e">❤️</span><span class="en">Red heart</span><span class="ec">47</span>
+        </div>
+        <div class="emoji-item"><span class="e">😅</span><span class="en">Grinning sweat</span><span
+            class="ec">43</span></div>
+        <div class="emoji-item"><span class="e">😁</span><span class="en"></span><span class="ec">40</span></div>
+        <div class="emoji-item"><span class="e">🤷‍♂️</span><span class="en">Man shrugging</span><span
+            class="ec">37</span></div>
+        <div class="emoji-item"><span class="e">😋</span><span class="en">Yum</span><span class="ec">28</span></div>
+        <div class="emoji-item"><span class="e">🤪</span><span class="en"></span><span class="ec">24</span></div>
+        <div class="emoji-item"><span class="e">😆</span><span class="en"></span><span class="ec">24</span></div>
+        <div class="emoji-item"><span class="e">😫</span><span class="en"></span><span class="ec">23</span></div>
+        <div class="emoji-item"><span class="e">🔥</span><span class="en">Fire</span><span class="ec">21</span></div>
+      </div>
+      <div class="two-col">
+        <div>
+          <h4>Garrett · 912 emojis</h4>
+          <div class="emoji-mini">
+            <div class="emoji-item"><span class="e">😘</span><span class="en">Blowing a kiss</span><span
+                class="ec">267</span></div>
+            <div class="emoji-item"><span class="e">😉</span><span class="en">Winking</span><span class="ec">169</span>
+            </div>
+            <div class="emoji-item"><span class="e">😂</span><span class="en">Face with tears of joy</span><span
+                class="ec">104</span></div>
+            <div class="emoji-item"><span class="e">🥵</span><span class="en"></span><span class="ec">60</span></div>
+            <div class="emoji-item"><span class="e">🤷‍♂️</span><span class="en">Man shrugging</span><span
+                class="ec">37</span></div>
+            <div class="emoji-item"><span class="e">😅</span><span class="en">Grinning sweat</span><span
+                class="ec">35</span></div>
+            <div class="emoji-item"><span class="e">😁</span><span class="en"></span><span class="ec">26</span></div>
+            <div class="emoji-item"><span class="e">😮‍💨</span><span class="en"></span><span class="ec">19</span></div>
+          </div>
+        </div>
+        <div>
+          <h4>Lisa · 667 emojis</h4>
+          <div class="emoji-mini">
+            <div class="emoji-item"><span class="e">🥰</span><span class="en">Smiling with hearts</span><span
+                class="ec">83</span></div>
+            <div class="emoji-item"><span class="e">😘</span><span class="en">Blowing a kiss</span><span
+                class="ec">70</span></div>
+            <div class="emoji-item"><span class="e">😍</span><span class="en">Heart-eyes</span><span
+                class="ec">51</span></div>
+            <div class="emoji-item"><span class="e">❤️</span><span class="en">Red heart</span><span class="ec">46</span>
+            </div>
+            <div class="emoji-item"><span class="e">🤪</span><span class="en"></span><span class="ec">24</span></div>
+            <div class="emoji-item"><span class="e">😫</span><span class="en"></span><span class="ec">23</span></div>
+            <div class="emoji-item"><span class="e">🥵</span><span class="en"></span><span class="ec">18</span></div>
+            <div class="emoji-item"><span class="e">😋</span><span class="en">Yum</span><span class="ec">17</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="sec">
+      <h2><span class="num">08</span>Reply speed</h2>
+      <p class="sub">Time to respond when the other person texts (gaps over 12 h excluded as new conversations).</p>
+      <div class="two-col">
+        <div>
+          <h4>Garrett replies — median 6 min 22 sec</h4>
+          <div class="chart-wrap"><svg viewBox="0 0 920 240" class="chart" role="img">
+              <rect x="70.8" y="151.3" width="115.9" height="45.7" rx="3" fill="#e76f51" /><text x="128.8" y="226"
+                text-anchor="middle" class="ax" transform="rotate(0)">&lt; 1 min</text>
+              <rect x="236.4" y="62.5" width="115.9" height="134.5" rx="3" fill="#e76f51" /><text x="294.4" y="226"
+                text-anchor="middle" class="ax" transform="rotate(0)">1-5 min</text>
+              <rect x="402.0" y="23.0" width="115.9" height="174.0" rx="3" fill="#e76f51" /><text x="460.0" y="226"
+                text-anchor="middle" class="ax" transform="rotate(0)">5-30 min</text>
+              <rect x="567.6" y="168.6" width="115.9" height="28.4" rx="3" fill="#e76f51" /><text x="625.6" y="226"
+                text-anchor="middle" class="ax" transform="rotate(0)">30-60 min</text>
+              <rect x="733.2" y="160.7" width="115.9" height="36.3" rx="3" fill="#e76f51" /><text x="791.2" y="226"
+                text-anchor="middle" class="ax" transform="rotate(0)">1 hr+</text>
+            </svg></div>
+        </div>
+        <div>
+          <h4>Lisa replies — median 2 min 45 sec</h4>
+          <div class="chart-wrap"><svg viewBox="0 0 920 240" class="chart" role="img">
+              <rect x="70.8" y="102.9" width="115.9" height="94.1" rx="3" fill="#9d4edd" /><text x="128.8" y="226"
+                text-anchor="middle" class="ax" transform="rotate(0)">&lt; 1 min</text>
+              <rect x="236.4" y="23.0" width="115.9" height="174.0" rx="3" fill="#9d4edd" /><text x="294.4" y="226"
+                text-anchor="middle" class="ax" transform="rotate(0)">1-5 min</text>
+              <rect x="402.0" y="95.4" width="115.9" height="101.6" rx="3" fill="#9d4edd" /><text x="460.0" y="226"
+                text-anchor="middle" class="ax" transform="rotate(0)">5-30 min</text>
+              <rect x="567.6" y="179.2" width="115.9" height="17.8" rx="3" fill="#9d4edd" /><text x="625.6" y="226"
+                text-anchor="middle" class="ax" transform="rotate(0)">30-60 min</text>
+              <rect x="733.2" y="175.2" width="115.9" height="21.8" rx="3" fill="#9d4edd" /><text x="791.2" y="226"
+                text-anchor="middle" class="ax" transform="rotate(0)">1 hr+</text>
+            </svg></div>
+        </div>
+      </div>
+      <p class="take">When Lisa texts, Garrett reads it within a median of <b>2 min 33 sec</b> (from 3,559 read
+        receipts). Median reply time: Garrett <b>6 min 22 sec</b> vs Lisa <b>2 min 45 sec</b>.</p>
+    </section>
+    <section class="sec">
+      <h2><span class="num">09</span>Who texts more</h2>
+      <p class="sub">Share of messages over time. Each bar is a month split by sender.</p>
+      <div class="balance-row">
+        <div class="chart-wrap" style="flex:2"><svg viewBox="0 0 920 300" class="chart" role="img">
+            <rect x="57.0" y="162.2" width="69.9" height="90.8" fill="#e76f51" />
+            <rect x="57.0" y="23.0" width="69.9" height="139.2" fill="#9d4edd" /><text x="92.0" y="288"
+              text-anchor="middle" class="ax">Oct</text>
+            <rect x="149.0" y="167.6" width="69.9" height="85.4" fill="#e76f51" />
+            <rect x="149.0" y="61.7" width="69.9" height="105.9" fill="#9d4edd" /><text x="184.0" y="288"
+              text-anchor="middle" class="ax">Nov</text>
+            <rect x="241.0" y="189.0" width="69.9" height="64.0" fill="#e76f51" />
+            <rect x="241.0" y="102.7" width="69.9" height="86.3" fill="#9d4edd" /><text x="276.0" y="288"
+              text-anchor="middle" class="ax">Dec</text>
+            <rect x="333.0" y="208.4" width="69.9" height="44.6" fill="#e76f51" />
+            <rect x="333.0" y="145.1" width="69.9" height="63.3" fill="#9d4edd" /><text x="368.0" y="288"
+              text-anchor="middle" class="ax">Jan</text>
+            <rect x="425.0" y="220.0" width="69.9" height="33.0" fill="#e76f51" />
+            <rect x="425.0" y="173.8" width="69.9" height="46.2" fill="#9d4edd" /><text x="460.0" y="288"
+              text-anchor="middle" class="ax">Feb</text>
+            <rect x="517.0" y="189.0" width="69.9" height="64.0" fill="#e76f51" />
+            <rect x="517.0" y="115.3" width="69.9" height="73.7" fill="#9d4edd" /><text x="552.0" y="288"
+              text-anchor="middle" class="ax">Mar</text>
+            <rect x="609.0" y="202.1" width="69.9" height="50.9" fill="#e76f51" />
+            <rect x="609.0" y="151.7" width="69.9" height="50.4" fill="#9d4edd" /><text x="644.0" y="288"
+              text-anchor="middle" class="ax">Apr</text>
+            <rect x="701.0" y="214.8" width="69.9" height="38.2" fill="#e76f51" />
+            <rect x="701.0" y="178.1" width="69.9" height="36.7" fill="#9d4edd" /><text x="736.0" y="288"
+              text-anchor="middle" class="ax">May</text>
+            <rect x="793.0" y="212.5" width="69.9" height="40.5" fill="#e76f51" />
+            <rect x="793.0" y="168.4" width="69.9" height="44.1" fill="#9d4edd" /><text x="828.0" y="288"
+              text-anchor="middle" class="ax">Jun</text>
+          </svg></div>
+        <div style="flex:0 0 260px"><svg viewBox="0 0 260 260" class="donut" role="img">
+            <path d="M 130.0 130.0 L 130.0 40.0 A 90 90 0 0 1 162.1 214.1 Z" fill="#e76f51" />
+            <path d="M 130.0 130.0 L 162.1 214.1 A 90 90 0 1 1 130.0 40.0 Z" fill="#9d4edd" />
+            <circle cx="130.0" cy="130.0" r="52" fill="white" /><text x="130.0" y="126.0" text-anchor="middle"
+              class="donut-big">44/56</text><text x="130.0" y="146.0" text-anchor="middle" class="ax">split</text>
+          </svg></div>
+      </div>
+      <div class="legend"><span class="lg"><i style="background:#e76f51"></i>Garrett 44.2%</span><span class="lg"><i
+            style="background:#9d4edd"></i>Lisa 55.8%</span></div>
+      <p class="take">Lisa sends <b>55.8%</b> of messages to Garrett's <b>44.2%</b>. Average message length: Garrett
+        <b>12.3</b> words, Lisa <b>9.6</b> words.</p>
+    </section>
+    <section class="sec">
+      <h2><span class="num">10</span>Daily rhythm</h2>
+      <p class="sub">Who opens the day, who closes it, and who breaks the silence to start a new conversation.</p>
+      <div class="three-col">
+        <div class="mini-stat">
+          <div class="ms-v">Lisa</div>
+          <div class="ms-l">says good morning most<br><span>128 days</span></div>
+        </div>
+        <div class="mini-stat">
+          <div class="ms-v">Lisa</div>
+          <div class="ms-l">gets the last word<br><span>120 nights</span></div>
+        </div>
+        <div class="mini-stat">
+          <div class="ms-v">Lisa</div>
+          <div class="ms-l">starts conversations<br><span>141 times</span></div>
+        </div>
+      </div>
+    </section>
+    <section class="sec">
+      <h2><span class="num">11</span>Milestones &amp; terms of endearment</h2>
+      <p class="sub">Relationship signal in the data — firsts, pet names, and notable records.</p>
+      <div class="milestone">
+        <div class="mi-date">Oct 10, 2025</div>
+        <div class="mi-body"><b>First time the word "love" appeared</b> — said by Lisa<div class="quote">“But I love the
+            confidence.The extremely handsome man says”</div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="mi-date">Dec 23, 2025</div>
+        <div class="mi-body"><b>First "I love you"</b> — said by Lisa<div class="quote">“I love you babe 😘 I&#x27;m
+            feeling so sad for some reason. At the same time excited for you to spend time with your family. Have a safe
+            trip. Sunday can&#x27;t get here”</div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="mi-date">Dec 23, 2025</div>
+        <div class="mi-body"><b>First "I love you" from Garrett</b> — said by Garrett<div class="quote">“Of course I
+            love you, and they would love you too”</div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="mi-date">Oct 14, 2025</div>
+        <div class="mi-body"><b>First time the word "sex" appeared</b> — said by Lisa<div class="quote">“Feel like a
+            teen crazy . And the sex amazing”</div>
+        </div>
+      </div>
+<div class="milestone">
+        <div class="mi-date">Jan 9, 2026</div>
+        <div class="mi-body"><b>Most positive message from Garrett</b> — said by Garrett · sentiment +0.90<div
+            class="quote">“Aw 🥰 I love you too baby. I can&#x27;t wait to have a fun weekend with you 😘”</div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="mi-date">Oct 24, 2025</div>
+        <div class="mi-body"><b>Most positive message from Lisa</b> — said by Lisa · sentiment +0.98<div class="quote">
+            “I just wanted to tell you how happy you have made me these last few weeks. You are so kind, smart, loving,
+            giving and so sexy. Thank you for being so good to me. ❤️”</div>
+        </div>
+      </div>
+      <div class="facts">
+        <div class="fact"><span>I love you</span>
+          <div>said <b>43</b> times</div>
+        </div>
+        <div class="fact"><span>Questions asked</span>
+          <div><b>815</b> (12.1% of texts)</div>
+        </div>
+        <div class="fact"><span>Longest message</span>
+          <div><b>198</b> words by Lisa</div>
+        </div>
+        <div class="fact"><span>Longest streak</span>
+          <div><b>34</b> days in a row</div>
+        </div>
+        <div class="fact"><span>Longest silence</span>
+          <div><b>226</b> hours</div>
+        </div>
+      </div>
+      <h4>Pet names used</h4>
+      <div class="pets"><span class="pet">love <b>591</b></span><span class="pet">baby <b>190</b></span><span
+          class="pet">babe <b>179</b></span><span class="pet">beautiful <b>94</b></span><span class="pet">gorgeous
+          <b>17</b></span><span class="pet">handsome <b>7</b></span><span class="pet">cutie <b>6</b></span><span
+          class="pet">honey <b>2</b></span><span class="pet">boo <b>2</b></span></div>
+    </section>
+    <section class="sec">
+      <h2><span class="num">12</span>Intimate moments</h2>
+      <p class="sub">Messages flagged for sexual/romantic content via a keyword, emoji, and phrase list. Frequency over
+        time, the phrases that recur, and the warmest examples.</p>
+      <div class="three-col">
+        <div class="mini-stat">
+          <div class="ms-v">849</div>
+          <div class="ms-l">flagged messages<br><span>12.6% of all texts</span></div>
+        </div>
+        <div class="mini-stat">
+          <div class="ms-v">430 / 419</div>
+          <div class="ms-l">Garrett / Lisa<br><span>who brings the heat</span></div>
+        </div>
+        <div class="mini-stat">
+          <div class="ms-v">Oct 12, 2025</div>
+          <div class="ms-l">first flagged message</div>
+        </div>
+      </div>
+      <h4>Frequency over time</h4>
+      <div class="chart-wrap"><svg viewBox="0 0 920 280" class="chart" role="img">
+          <line x1="46" y1="234.0" x2="874" y2="234.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="238.0"
+            text-anchor="end" class="ax">0</text>
+          <line x1="46" y1="187.0" x2="874" y2="187.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="191.0"
+            text-anchor="end" class="ax">45</text>
+          <line x1="46" y1="140.0" x2="874" y2="140.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="144.0"
+            text-anchor="end" class="ax">90</text>
+          <line x1="46" y1="93.0" x2="874" y2="93.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="97.0"
+            text-anchor="end" class="ax">134</text>
+          <line x1="46" y1="46.0" x2="874" y2="46.0" stroke="#eadfe6" stroke-width="1" /><text x="38" y="50.0"
+            text-anchor="end" class="ax">179</text>
+          <line x1="46.0" y1="46" x2="46.0" y2="234" stroke="#eadfe6" stroke-width="1" /><text x="46.0" y="252"
+            text-anchor="middle" class="ax">Oct</text>
+          <line x1="149.5" y1="46" x2="149.5" y2="234" stroke="#eadfe6" stroke-width="1" /><text x="149.5" y="252"
+            text-anchor="middle" class="ax">Nov</text>
+          <line x1="253.0" y1="46" x2="253.0" y2="234" stroke="#eadfe6" stroke-width="1" /><text x="253.0" y="252"
+            text-anchor="middle" class="ax">Dec</text>
+          <line x1="356.5" y1="46" x2="356.5" y2="234" stroke="#eadfe6" stroke-width="1" /><text x="356.5" y="252"
+            text-anchor="middle" class="ax">Jan</text>
+          <line x1="460.0" y1="46" x2="460.0" y2="234" stroke="#eadfe6" stroke-width="1" /><text x="460.0" y="252"
+            text-anchor="middle" class="ax">Feb</text>
+          <line x1="563.5" y1="46" x2="563.5" y2="234" stroke="#eadfe6" stroke-width="1" /><text x="563.5" y="252"
+            text-anchor="middle" class="ax">Mar</text>
+          <line x1="667.0" y1="46" x2="667.0" y2="234" stroke="#eadfe6" stroke-width="1" /><text x="667.0" y="252"
+            text-anchor="middle" class="ax">Apr</text>
+          <line x1="770.5" y1="46" x2="770.5" y2="234" stroke="#eadfe6" stroke-width="1" /><text x="770.5" y="252"
+            text-anchor="middle" class="ax">May</text>
+          <line x1="874.0" y1="46" x2="874.0" y2="234" stroke="#eadfe6" stroke-width="1" /><text x="874.0" y="252"
+            text-anchor="middle" class="ax">Jun</text>
+          <polyline
+            points="46.0,46.0 149.5,90.1 253.0,100.6 356.5,184.6 460.0,190.9 563.5,157.3 667.0,129.0 770.5,167.8 874.0,147.9"
+            fill="none" stroke="#e63946" stroke-width="2" stroke-linejoin="round" />
+        </svg></div>
+      <h4>Most common phrases (4+ words)</h4>
+      <div class="phrase-card">
+        <ol class="phrase-list">
+          <li><span class="pl-bar" style="width:100%"></span><span class="pl-t">i can&#x27;t wait to</span><span
+              class="pl-c">17</span></li>
+          <li><span class="pl-bar" style="width:82%"></span><span class="pl-t">i want you to</span><span
+              class="pl-c">14</span></li>
+          <li><span class="pl-bar" style="width:53%"></span><span class="pl-t">i want to kiss you</span><span
+              class="pl-c">9</span></li>
+          <li><span class="pl-bar" style="width:47%"></span><span class="pl-t">i need you to</span><span
+              class="pl-c">8</span></li>
+          <li><span class="pl-bar" style="width:41%"></span><span class="pl-t">i want to bend you over and fuck
+              you</span><span class="pl-c">7</span></li>
+          <li><span class="pl-bar" style="width:41%"></span><span class="pl-t">i can&#x27;t stop thinking
+              about</span><span class="pl-c">7</span></li>
+          <li><span class="pl-bar" style="width:35%"></span><span class="pl-t">i want to kiss your face</span><span
+              class="pl-c">6</span></li>
+          <li><span class="pl-bar" style="width:35%"></span><span class="pl-t">my arms around you</span><span
+              class="pl-c">6</span></li>
+          <li><span class="pl-bar" style="width:29%"></span><span class="pl-t">i want you in my arms</span><span
+              class="pl-c">5</span></li>
+          <li><span class="pl-bar" style="width:29%"></span><span class="pl-t">hey sexy how&#x27;s your day
+              going</span><span class="pl-c">5</span></li>
+          <li><span class="pl-bar" style="width:29%"></span><span class="pl-t">i just want you to</span><span
+              class="pl-c">5</span></li>
+          <li><span class="pl-bar" style="width:29%"></span><span class="pl-t">you and kiss you</span><span
+              class="pl-c">5</span></li>
+        </ol>
+      </div>
+      <h4>Top triggers</h4>
+      <div class="chart-wrap"><svg viewBox="0 0 920 320" class="chart" role="img">
+          <rect x="150" y="25.0" width="131.1" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="37.4"
+            text-anchor="end" class="ax">pussy</text><text x="287.1" y="37.4" class="ax">23</text>
+          <rect x="150" y="47.8" width="182.4" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="60.2"
+            text-anchor="end" class="ax">kissing</text><text x="338.4" y="60.2" class="ax">32</text>
+          <rect x="150" y="70.7" width="222.3" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="83.1"
+            text-anchor="end" class="ax">sex</text><text x="378.3" y="83.1" class="ax">39</text>
+          <rect x="150" y="93.5" width="250.8" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="105.9"
+            text-anchor="end" class="ax">need you</text><text x="406.8" y="105.9" class="ax">44</text>
+          <rect x="150" y="116.3" width="399.1" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="128.8"
+            text-anchor="end" class="ax">kiss</text><text x="555.1" y="128.8" class="ax">70</text>
+          <rect x="150" y="139.2" width="416.2" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="151.6"
+            text-anchor="end" class="ax">fucking</text><text x="572.2" y="151.6" class="ax">73</text>
+          <rect x="150" y="162.0" width="433.3" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="174.4"
+            text-anchor="end" class="ax">want you</text><text x="589.3" y="174.4" class="ax">76</text>
+          <rect x="150" y="184.8" width="433.3" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="197.2"
+            text-anchor="end" class="ax">🥵</text><text x="589.3" y="197.2" class="ax">76</text>
+          <rect x="150" y="207.7" width="444.7" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="220.1"
+            text-anchor="end" class="ax">cock</text><text x="600.7" y="220.1" class="ax">78</text>
+          <rect x="150" y="230.5" width="558.7" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="242.9"
+            text-anchor="end" class="ax">daddy</text><text x="714.7" y="242.9" class="ax">98</text>
+          <rect x="150" y="253.3" width="621.4" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="265.8"
+            text-anchor="end" class="ax">fuck</text><text x="777.4" y="265.8" class="ax">109</text>
+          <rect x="150" y="276.2" width="724.0" height="16.8" rx="3" fill="#9d4edd" /><text x="142" y="288.6"
+            text-anchor="end" class="ax">sexy</text><text x="880.0" y="288.6" class="ax">127</text>
+        </svg></div>
+      <h4>Most positive examples</h4>
+      <div class="milestone">
+        <div class="mi-date">Apr 28, 2026<div class="mi-score">sentiment +0.87</div>
+        </div>
+        <div class="mi-body"><b>Garrett</b> <span class="tag">kissing</span><span class="tag">sexy</span>
+          <div class="quote">“Oh yes, you do. Looking forward to kissing your sexy face tonight”</div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="mi-date">Nov 6, 2025<div class="mi-score">sentiment +0.80</div>
+        </div>
+        <div class="mi-body"><b>Lisa</b> <span class="tag">cock</span><span class="tag">daddy</span>
+          <div class="quote">“Yes daddy so strapping with a huge perfect cock”</div>
+        </div>
+      </div>
+            <div class="milestone">
+        <div class="mi-date">Nov 6, 2025<div class="mi-score">sentiment +0.70</div>
+        </div>
+        <div class="mi-body"><b>Garrett</b> <span class="tag">cock</span><span class="tag">daddy</span><span
+            class="tag">pussy</span>
+          <div class="quote">“Daddy can&#x27;t wait to bury his big cock inside your perfect little pussy again”</div>
+        </div>
+      </div>
+            <div class="milestone">
+        <div class="mi-date">Dec 3, 2025<div class="mi-score">sentiment +0.70</div>
+        </div>
+        <div class="mi-body"><b>Lisa</b> <span class="tag">cock</span><span class="tag">daddy</span>
+          <div class="quote">“You definitely fill me up with your big cock daddy mmmm”</div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="mi-date">Jan 7, 2026<div class="mi-score">sentiment +0.77</div>
+        </div>
+        <div class="mi-body"><b>Garrett</b> <span class="tag">fucking</span><span class="tag">🥵</span>
+          <div class="quote">“I love fucking you from behind like that, deep and slow 🥵”</div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="mi-date">Nov 7, 2025<div class="mi-score">sentiment +0.65</div>
+        </div>
+        <div class="mi-body"><b>Lisa</b> <span class="tag">fuck</span><span class="tag">need you</span>
+          <div class="quote">“Fuck I need you”</div>
+        </div>
+      </div>
+      <div class="milestone">
+        <div class="mi-date">Nov 13, 2025<div class="mi-score">sentiment +0.65</div>
+        </div>
+        <div class="mi-body"><b>Lisa</b> <span class="tag">kitty</span><span class="tag">throbbing</span>
+          <div class="quote">“Oh, your kitty is definitely throbbing. 😍 Not sure I can wear jeans today.”</div>
+        </div>
+      </div>
+    </section>
+    <footer>Generated from iMessage export · sentiment via VADER · Jun 23, 2026<br>
+      All analysis ran on-device; no message content left this machine.</footer>
+  </div>
+</body>
+
+</html>
